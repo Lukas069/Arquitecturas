@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+
+  books:
+    image: books-micro
+    container_name: books
+    networks:
+      - library-soa
+    ports:
+      - "8085:5000"
+
+  loans:
+    image: loans-micro
+    container_name: loans
+    networks:
+      - library-soa
+    ports:
+      - "8086:5000"
+    depends_on:
+      - books
+
+
+  users:
+    image: users-micro
+    container_name: users
+    volumes:
+      - user-data:/data
+    networks:
+      - library-soa
+    ports:
+      - "8087:5000"
+
+
+
+volumes:
+  catalog-data:
+  borrowing-data:
+  user-data:
+
+networks:
+  library-network:
+    driver: bridge
